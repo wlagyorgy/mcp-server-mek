@@ -1,5 +1,5 @@
 # Playwright base image includes Chromium and system dependencies for headless scraping.
-FROM mcr.microsoft.com/playwright/python:v1.49.1-jammy
+FROM mcr.microsoft.com/playwright/python:v1.49.1-noble
 
 WORKDIR /app
 
