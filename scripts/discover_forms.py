@@ -39,27 +39,7 @@ PROBE_PAYLOADS: dict[str, dict[str, Any]] = {
         "method_override": "POST",
         "data": {"dc_creator": "Ady", "size": "10"},
     },
-    "advanced": {
-        "method_override": "POST",
-        "submit_url": "https://www.mek.oszk.hu/katalog/kataluj.php3",
-        "data": {
-            "s1": "dc_creator_o FamilyGivenName",
-            "m1": "Ady",
-            "muv1": "and",
-            "s2": "dc_title main",
-            "m2": "",
-            "muv2": "and",
-            "s3": "dc_subject keyword",
-            "m3": "",
-            "muv3": "and",
-            "s4": "dc_subject keyword",
-            "m4": "",
-            "muv4": "and",
-            "s5": "dc_subject keyword",
-            "m5": "",
-            "szerint": "szerzosz",
-        },
-    },
+    # advanced: no HTTP probe — the detailed page submits via browser/iframe
     "fulltext_new": {
         "method_override": "POST",
         "data": {"body": "magyar irodalom", "size": "10"},

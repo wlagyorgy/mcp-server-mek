@@ -122,9 +122,8 @@ python scripts/discover_forms.py --probe
 | Tool | Forrás | Agent használat |
 |---|---|---|
 | `mek_search_simple` | elfull POST | „Ady Endre versei”, gyors metaadat-keresés |
-| `mek_search_advanced` | kataluj.php3 POST | Nyelv/formátum/CC licenc szerinti szűrés, AND/OR/NOT |
-| `mek_search_fulltext` | elfulltext + legacy GET | Szövegtörzsben keresés; `mode: "simple" \| "advanced"` paraméter |
-| `mek_get_document` | RDF content negotiation | Egy MEK ID részletes metaadatai |
+| `mek_search_advanced` | detailed oldal (Playwright) | Mező-specifikus szűrés, AND/OR/NOT |
+| `mek_search_fulltext` | elfulltext POST | Szövegtörzsben keresés |
 
 ### Rétegek
 
@@ -134,6 +133,7 @@ mek_mcp/clients/
   ├── base.py
   ├── simple_search.py
   ├── advanced_search.py
+  ├── detailed_scraper.py
   └── fulltext_search.py
 mek_mcp/parsers/results.py
 mek_mcp/models.py
@@ -156,7 +156,7 @@ mek_mcp/models.py
 | MEK HTML struktúra változik | Parser szelektorok egy helyen; discovery script periodikus újrafuttatása |
 | Nincs hivatalos API-szerződés | Rate limit, cache (TTL), egyértelmű hibaüzenetek |
 | SPARQL adat elavult | Kereséshez nem használjuk; csak `mek_get_document` kiegészítés |
-| Összetett keresés iframe-es UX | Közvetlen POST `kataluj.php3`-ra |
+| Összetett keresés iframe-es UX | Playwright scraper a `/hu/search/detailed/` oldalon |
 | Karakterkódolás | Encoding detektálás mezőnként a client rétegben |
 
 ---

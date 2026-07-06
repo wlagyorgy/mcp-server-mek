@@ -52,7 +52,7 @@ def parse_simple_or_fulltext_results(html: str) -> list[MekDocument]:
 
 
 def parse_advanced_results(html: str) -> list[MekDocument]:
-    """Parse kataluj.php3 result list (.hit blocks)."""
+    """Parse advanced/detailed search result list (.hit blocks)."""
     soup = BeautifulSoup(html, "lxml")
     documents: list[MekDocument] = []
 

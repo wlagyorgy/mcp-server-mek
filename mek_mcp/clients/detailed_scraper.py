@@ -1,4 +1,4 @@
-"""Web scraper for the MEK advanced search page (iframe-based UI)."""
+"""Playwright scraper for the MEK detailed search page."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ class DetailedSearchParams:
 
 
 def scrape_detailed_search(params: DetailedSearchParams) -> str:
-    """Fill the detailed search form in a browser and return iframe result HTML."""
+    """Fill the detailed search form and return result HTML from the results iframe."""
     timeout_ms = int(os.getenv("MEK_SCRAPE_TIMEOUT_MS", str(DEFAULT_TIMEOUT_MS)))
     headless = os.getenv("MEK_PLAYWRIGHT_HEADLESS", "true").lower() != "false"
 
@@ -57,7 +57,7 @@ def _fill_form(page: Page, params: DetailedSearchParams, timeout_ms: int) -> Non
         page.select_option("select[name=s2]", params.field2)
         page.fill('input[name="m2"]', params.query2)
         if params.operator in ("and", "or", "not"):
-            page.locator(f'input[name="muv2"][value="{params.operator}"]').check()
+            page.locator(f'input[name="muv1"][value="{params.operator}"]').check()
 
     page.locator(f'input[name="szerint"][value="{params.sort_by}"]').check()
 

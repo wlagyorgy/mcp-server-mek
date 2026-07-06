@@ -19,8 +19,8 @@ def test_resolve_submit_url_same_page_for_hash():
 
 def test_resolve_submit_url_relative():
     assert (
-        _resolve_submit_url("https://www.mek.oszk.hu/hu/search/detailed/", "/katalog/kataluj.php3")
-        == "https://www.mek.oszk.hu/katalog/kataluj.php3"
+        _resolve_submit_url("https://www.mek.oszk.hu/hu/search/detailed/", "/api/search")
+        == "https://www.mek.oszk.hu/api/search"
     )
 
 
