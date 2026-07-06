@@ -7,7 +7,6 @@ from mek_mcp.models import SearchResult
 from mek_mcp.parsers.results import parse_advanced_results, parse_total_hits
 from mek_mcp.urls import ADVANCED_SEARCH_URL
 
-# Human-friendly field names → MEK catalog field values (s1–s5 options).
 FIELD_ALIASES: dict[str, str] = {
     "title": "dc_title main",
     "subtitle": "dc_title subtitle",
@@ -33,7 +32,7 @@ SORT_ALIASES = {
 }
 
 
-def search_advanced(
+async def search_advanced(
     *,
     field: str = "author",
     query: str = "",
@@ -47,14 +46,11 @@ def search_advanced(
     if not query.strip():
         raise ValueError("query is required")
 
-    mek_field = FIELD_ALIASES.get(field, field)
-    mek_field2 = FIELD_ALIASES.get(field2, field2) if field2 else ""
-
-    html = scrape_detailed_search(
+    html = await scrape_detailed_search(
         DetailedSearchParams(
-            field=mek_field,
+            field=FIELD_ALIASES.get(field, field),
             query=query,
-            field2=mek_field2,
+            field2=FIELD_ALIASES.get(field2, field2) if field2 else "",
             query2=query2,
             operator=operator if operator in ("and", "or", "not") else "and",
             sort_by=SORT_ALIASES.get(sort_by, sort_by),

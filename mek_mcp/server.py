@@ -110,7 +110,7 @@ def mek_search_fulltext(
 
 
 @mcp.tool()
-def mek_search_advanced(
+async def mek_search_advanced(
     query: str,
     field: str = "author",
     field2: str = "",
@@ -133,7 +133,7 @@ def mek_search_advanced(
         accent_insensitive: Search without Hungarian accents when True.
     """
     return _dump(
-        search_advanced(
+        await search_advanced(
             field=field,
             query=query,
             field2=field2,

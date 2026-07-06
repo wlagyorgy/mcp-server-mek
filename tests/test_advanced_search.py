@@ -25,8 +25,9 @@ def test_parse_advanced_fixture():
 
 
 @pytest.mark.network
-def test_live_advanced_search_scrape():
-    result = search_advanced(field="author", query="Arany", page_size=5)
+@pytest.mark.asyncio
+async def test_live_advanced_search_scrape():
+    result = await search_advanced(field="author", query="Arany", page_size=5)
     assert result.search_url == ADVANCED_SEARCH_URL
     assert result.total_hits is not None and result.total_hits >= 40
     assert len(result.documents) == 5
