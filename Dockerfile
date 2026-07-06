@@ -1,5 +1,5 @@
-# Playwright base image includes Chromium and system dependencies for headless scraping.
-FROM mcr.microsoft.com/playwright/python:v1.49.1-noble
+# Keep this tag in sync with the playwright pin in pyproject.toml.
+FROM mcr.microsoft.com/playwright/python:v1.61.0-noble
 
 WORKDIR /app
 
