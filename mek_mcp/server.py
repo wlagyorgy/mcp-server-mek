@@ -16,6 +16,7 @@ _DEFAULT_HOST = "127.0.0.1"
 _DEFAULT_PORT = 8000
 _DEFAULT_SSE_PATH = "/sse"
 _DEFAULT_MESSAGE_PATH = "/messages/"
+_DEFAULT_STREAMABLE_HTTP_PATH = "/mcp"
 
 mcp = FastMCP(
     "mek",
@@ -30,6 +31,11 @@ mcp = FastMCP(
     port=int(os.getenv("PORT", str(_DEFAULT_PORT))),
     sse_path=os.getenv("MCP_SSE_PATH", _DEFAULT_SSE_PATH),
     message_path=os.getenv("MCP_MESSAGE_PATH", _DEFAULT_MESSAGE_PATH),
+    streamable_http_path=os.getenv(
+        "MCP_STREAMABLE_HTTP_PATH", _DEFAULT_STREAMABLE_HTTP_PATH
+    ),
+    stateless_http=True,
+    json_response=True,
 )
 
 
@@ -155,12 +161,17 @@ def main() -> None:
         mcp.run(transport="stdio")
         return
 
+    if transport in {"streamable-http", "streamable_http", "http"}:
+        mcp.run(transport="streamable-http")
+        return
+
     if transport == "sse":
         mcp.run(transport="sse")
         return
 
     raise ValueError(
-        f"Unsupported MCP_TRANSPORT={transport!r}. Use 'stdio' (local) or 'sse' (Render/remote)."
+        f"Unsupported MCP_TRANSPORT={transport!r}. "
+        "Use 'stdio' (local), 'streamable-http' (Render/remote), or 'sse' (legacy)."
     )
 
 

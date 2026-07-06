@@ -46,16 +46,18 @@ A projekt tartalmazza: [`.cursor/mcp.json`](.cursor/mcp.json)
 
 Előfeltétel: `pip install -e ".[dev]"` a `.venv`-ben. Cursorban: **Settings → MCP** → a `mek` szerver engedélyezése (ha a team policy engedi).
 
-## Render deploy (SSE)
+## Render deploy (Streamable HTTP)
 
 ### Docker (ajánlott)
 
 ```bash
 docker build -t mek-mcp .
-docker run --rm -p 10000:10000 -e MCP_TRANSPORT=sse -e HOST=0.0.0.0 mek-mcp
+docker run --rm -p 10000:10000 -e MCP_TRANSPORT=streamable-http -e HOST=0.0.0.0 mek-mcp
 ```
 
 Health check: `http://localhost:10000/health`
+
+MCP végpont: `http://localhost:10000/mcp`
 
 ### Render Web Service
 
@@ -66,7 +68,7 @@ Health check: `http://localhost:10000/health`
 
 | Változó | Érték |
 |---------|--------|
-| `MCP_TRANSPORT` | `sse` |
+| `MCP_TRANSPORT` | `streamable-http` |
 | `HOST` | `0.0.0.0` |
 | `MEK_PLAYWRIGHT_HEADLESS` | `true` |
 
@@ -74,7 +76,11 @@ Start command (Dockerfile-ből automatikus): `python -m mek_mcp.server`
 
 Health check: `GET /health`
 
-MCP SSE végpontok (alapértelmezés):
+MCP végpont (alapértelmezés):
+
+- Streamable HTTP: `https://<service>.onrender.com/mcp`
+
+Legacy SSE (opcionális, `MCP_TRANSPORT=sse`):
 
 - SSE stream: `https://<service>.onrender.com/sse`
 - Üzenetek: `https://<service>.onrender.com/messages/`
