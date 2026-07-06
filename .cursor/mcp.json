@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "mek": {
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": ["-m", "mek_mcp.server"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

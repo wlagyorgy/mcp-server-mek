@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: mek-mcp-server
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: MCP_TRANSPORT
+        value: sse
+      - key: HOST
+        value: 0.0.0.0
+      - key: MEK_PLAYWRIGHT_HEADLESS
+        value: "true"
+      - key: MEK_SCRAPE_TIMEOUT_MS
+        value: "90000"
