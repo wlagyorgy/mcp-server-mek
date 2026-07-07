@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from playwright.async_api import Page, TimeoutError as PlaywrightTimeoutError
 from playwright.async_api import async_playwright
@@ -13,21 +13,31 @@ from mek_mcp.urls import ADVANCED_SEARCH_URL
 IFRAME_NAME = "Fresponse"
 RESULT_SELECTOR = "div.hit, div.numberofhits"
 DEFAULT_TIMEOUT_MS = 60_000
+MAX_ROWS = 5
+
+
+@dataclass
+class SearchRow:
+    field: str
+    query: str
 
 
 @dataclass
 class DetailedSearchParams:
-    field: str
-    query: str
-    field2: str = ""
-    query2: str = ""
-    operator: str = "and"
+    rows: list[SearchRow]
+    operators: list[str] = field(default_factory=list)
     sort_by: str = "szerzosz"
     accent_insensitive: bool = False
+    include_processing: bool = False
 
 
 async def scrape_detailed_search(params: DetailedSearchParams) -> str:
     """Fill the detailed search form and return result HTML from the results iframe."""
+    if not params.rows:
+        raise ValueError("At least one search row is required")
+    if len(params.rows) > MAX_ROWS:
+        raise ValueError(f"Advanced search supports at most {MAX_ROWS} rows")
+
     timeout_ms = int(os.getenv("MEK_SCRAPE_TIMEOUT_MS", str(DEFAULT_TIMEOUT_MS)))
     headless = os.getenv("MEK_PLAYWRIGHT_HEADLESS", "true").lower() != "false"
 
@@ -54,18 +64,23 @@ async def scrape_detailed_search(params: DetailedSearchParams) -> str:
 
 async def _fill_form(page: Page, params: DetailedSearchParams, timeout_ms: int) -> None:
     await page.wait_for_selector('form[name="katal"]', timeout=timeout_ms)
-    await page.select_option("select[name=s1]", params.field)
-    await page.fill('input[name="m1"]', params.query)
 
-    if params.field2 and params.query2:
-        await page.select_option("select[name=s2]", params.field2)
-        await page.fill('input[name="m2"]', params.query2)
-        if params.operator in ("and", "or", "not"):
+    for index, row in enumerate(params.rows, start=1):
+        await page.select_option(f"select[name=s{index}]", row.field)
+        await page.fill(f'input[name="m{index}"]', row.query)
+
+    for index, operator in enumerate(params.operators, start=1):
+        if operator in ("and", "or", "not"):
             await page.locator(
-                f'input[name="muv1"][value="{params.operator}"]'
+                f'input[name="muv{index}"][value="{operator}"]'
             ).check()
 
     await page.locator(f'input[name="szerint"][value="{params.sort_by}"]').check()
+
+    if params.include_processing:
+        await page.locator("#subid").check()
+    else:
+        await page.locator("#subid").uncheck()
 
     if params.accent_insensitive:
         await page.locator("#ekezet").check()

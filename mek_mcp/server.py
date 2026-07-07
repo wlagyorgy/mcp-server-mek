@@ -115,22 +115,43 @@ async def mek_search_advanced(
     field: str = "author",
     field2: str = "",
     query2: str = "",
+    field3: str = "",
+    query3: str = "",
+    field4: str = "",
+    query4: str = "",
+    field5: str = "",
+    query5: str = "",
     operator: str = "and",
+    operator2: str = "and",
+    operator3: str = "and",
+    operator4: str = "and",
     sort_by: str = "author",
     accent_insensitive: bool = False,
+    include_processing: bool = False,
+    max_results: int = 50,
 ) -> dict:
-    """Advanced MEK bibliographic search with field selection and boolean logic.
+    """Advanced MEK bibliographic search with up to 5 field-specific criteria rows.
+
+    Each row is a field + query pair. Rows are combined with AND/OR/NOT operators
+    (operator between rows 1-2, operator2 between 2-3, etc.). MEK returns all hits
+    in one list; max_results only limits how many documents are returned.
 
     Args:
-        query: Search term for the primary field.
-        field: Primary field — one of: title, author, subject, language, format,
-            type, publisher, series, rights, geographic, period, contributor,
-            or a raw MEK field value.
-        field2: Optional second field name (same options as field).
-        query2: Optional second search term (combined with operator).
-        operator: How to combine rows: "and", "or", or "not".
+        query: Search term for row 1.
+        field: Row 1 field alias or raw MEK value (see mek_list_search_fields).
+        field2: Optional row 2 field.
+        query2: Optional row 2 search term.
+        field3, query3: Optional row 3.
+        field4, query4: Optional row 4.
+        field5, query5: Optional row 5.
+        operator: Combine rows 1 and 2: "and", "or", or "not".
+        operator2: Combine rows 2 and 3.
+        operator3: Combine rows 3 and 4.
+        operator4: Combine rows 4 and 5.
         sort_by: Sort results by "title", "author", "date", or "id".
         accent_insensitive: Search without Hungarian accents when True.
+        include_processing: Include in-processing documents when True.
+        max_results: Maximum documents returned (MEK has no server-side paging).
     """
     return _dump(
         await search_advanced(
@@ -138,9 +159,20 @@ async def mek_search_advanced(
             query=query,
             field2=field2,
             query2=query2,
+            field3=field3,
+            query3=query3,
+            field4=field4,
+            query4=query4,
+            field5=field5,
+            query5=query5,
             operator=operator,
+            operator2=operator2,
+            operator3=operator3,
+            operator4=operator4,
             sort_by=sort_by,
             accent_insensitive=accent_insensitive,
+            include_processing=include_processing,
+            max_results=max_results,
         )
     )
 
